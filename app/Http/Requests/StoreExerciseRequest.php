@@ -26,7 +26,7 @@ class StoreExerciseRequest extends FormRequest
         return [
             'is_active' => ['bool'],
             'name' => ['required', 'string', 'unique:exercises,name', 'max:255'],
-            'description' => ['required', 'string', 'max:1024'],
+            'description' => ['required', 'string', 'max:255'],
         ];
     }
 

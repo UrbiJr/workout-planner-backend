@@ -59,29 +59,27 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Attempt to log in
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            // Regenerate session for security
-            $request->session()->regenerate();
+        $user = User::whereEmail($credentials['email'])->first();
 
-            // Revoca i token esistenti e crea un nuovo API token
-            Auth::user()->tokens()->delete();
-            $token = Auth::user()->createToken('auth-token')->plainTextToken;
-
-            return response()->json([
-                'message' => 'Login successful',
-                'user' => [
-                    'id' => Auth::user()->id,
-                    'name' => Auth::user()->name,
-                    'email' => Auth::user()->email,
-                ],
-                'token' => $token,
+        // Verifica credenziali
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Credenziali non valide.'],
             ]);
         }
 
-        // If login fails, redirect back with error
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials do not match our records.'],
+        // Revoca i token esistenti e crea un nuovo API token
+        Auth::user()->tokens()->delete();
+        $token = Auth::user()->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => [
+                'id' => Auth::user()->id,
+                'name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+            ],
+            'token' => $token,
         ]);
     }
 

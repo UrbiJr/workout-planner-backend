@@ -27,7 +27,7 @@ class UpdateExerciseRequest extends FormRequest
 
         return [
             'is_active' => ['sometimes', 'bool'],
-            'description' => ['sometimes', 'string', 'max:1024'],
+            'description' => ['sometimes', 'string', 'max:255'],
             // Ignore current client when checking uniqueness
             'name' => [
                 'sometimes',
