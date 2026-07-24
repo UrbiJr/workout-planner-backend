@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class Register extends Controller
@@ -35,8 +36,10 @@ class Register extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
+        $request->session()->regenerate();
+
         // Crea un API token per l'utente
-        $token = $user->createToken('auth-token')->plainTextToken;
+        Auth::login($user);
 
         return response()->json([
             'message' => 'Registration successful',
@@ -44,8 +47,7 @@ class Register extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-            ],
-            'token' => $token,
+            ]
         ], 201);
     }
 }

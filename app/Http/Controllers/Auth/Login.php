@@ -22,27 +22,21 @@ class Login extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::whereEmail($credentials['email'])->first();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-        // Verifica credenziali
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Credenziali non valide.'],
+            return response()->json([
+                'message' => 'Login successful',
+                'user' => [
+                    'id' => Auth::user()->id,
+                    'name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                ]
             ]);
         }
 
-        // Revoca i token esistenti e crea un nuovo API token
-        $user->tokens()->delete();
-        $token = $user->createToken('auth-token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
-            'token' => $token,
+        throw ValidationException::withMessages([
+            'email' => ['Credenziali non valide.'],
         ]);
     }
 }
