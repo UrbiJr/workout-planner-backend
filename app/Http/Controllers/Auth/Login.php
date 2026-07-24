@@ -32,15 +32,15 @@ class Login extends Controller
         }
 
         // Revoca i token esistenti e crea un nuovo API token
-        Auth::user()->tokens()->delete();
-        $token = Auth::user()->createToken('auth-token')->plainTextToken;
+        $user->tokens()->delete();
+        $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
             'user' => [
-                'id' => Auth::user()->id,
-                'name' => Auth::user()->name,
-                'email' => Auth::user()->email,
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
             ],
             'token' => $token,
         ]);
