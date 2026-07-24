@@ -50,4 +50,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Client::class);
     }
+
+    /**
+     * Restituisce gli esercizi creati dal p.t.
+     */
+    public function exercises(): HasMany
+    {
+        return $this->hasMany(Exercise::class);
+    }
 }

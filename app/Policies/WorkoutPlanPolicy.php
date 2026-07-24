@@ -21,7 +21,7 @@ class WorkoutPlanPolicy
      */
     public function view(User $user, WorkoutPlan $workoutPlan): bool
     {
-        return $workoutPlan->client()->personalTrainer()->is($user);
+        return $workoutPlan->client->user_id === $user->id;
     }
 
     /**
@@ -37,7 +37,7 @@ class WorkoutPlanPolicy
      */
     public function update(User $user, WorkoutPlan $workoutPlan): bool
     {
-        return $workoutPlan->client()->personalTrainer()->is($user);
+        return $workoutPlan->client->user_id === $user->id;
     }
 
     /**
@@ -45,7 +45,7 @@ class WorkoutPlanPolicy
      */
     public function delete(User $user, WorkoutPlan $workoutPlan): bool
     {
-        return $workoutPlan->client()->personalTrainer()->is($user);
+        return $workoutPlan->client->user_id === $user->id;
     }
 
     /**
@@ -53,7 +53,7 @@ class WorkoutPlanPolicy
      */
     public function restore(User $user, WorkoutPlan $workoutPlan): bool
     {
-        return $workoutPlan->client()->personalTrainer()->is($user);
+        return $workoutPlan->client->user_id === $user->id;
     }
 
     /**
@@ -61,6 +61,6 @@ class WorkoutPlanPolicy
      */
     public function forceDelete(User $user, WorkoutPlan $workoutPlan): bool
     {
-        return $workoutPlan->client()->personalTrainer()->is($user);
+        return $workoutPlan->client->user_id === $user->id;
     }
 }

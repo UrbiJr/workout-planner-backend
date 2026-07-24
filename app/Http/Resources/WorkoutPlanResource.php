@@ -14,6 +14,14 @@ class WorkoutPlanResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'client_id' => $this->client_id,
+            'exercises_count' => $this->whenCounted('exercises'),
+            // Include gli esercizi della scheda di allenamento quando caricati
+            'exercises' => ExerciseResource::collection($this->whenLoaded('exercises')),
+            'created_at' => $this->created_at->toIso8601String(),
+            'updated_at' => $this->updated_at->toIso8601String(),
+        ];
     }
 }
