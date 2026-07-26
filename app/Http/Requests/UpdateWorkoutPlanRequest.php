@@ -26,7 +26,7 @@ class UpdateWorkoutPlanRequest extends FormRequest
         return [
             'client_id' => ['sometimes', 'integer', Rule::exists('clients', 'id')],
             'exercises' => ['sometimes', 'array'],
-            'exercises.*.exercise_id' => ['required', 'integer', Rule::exists('exercises', 'id')],
+            'exercises.*.id' => ['required', 'integer', Rule::exists('exercises', 'id')],
             'exercises.*.sets' => ['required', 'integer', 'min:1'],
             'exercises.*.reps' => ['required', 'integer', 'min:1'],
         ];

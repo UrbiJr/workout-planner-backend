@@ -17,6 +17,7 @@ class WorkoutPlanResource extends JsonResource
         return [
             'id' => $this->id,
             'client_id' => $this->client_id,
+            'client' => new ClientResource($this->whenLoaded('client')),
             'exercises_count' => $this->whenCounted('exercises'),
             // Include gli esercizi della scheda di allenamento quando caricati
             'exercises' => ExerciseResource::collection($this->whenLoaded('exercises')),

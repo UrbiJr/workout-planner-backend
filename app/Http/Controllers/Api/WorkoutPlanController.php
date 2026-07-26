@@ -29,7 +29,8 @@ class WorkoutPlanController extends Controller
         $wplans = WorkoutPlan::query()
             // includi solo i workout plan assegnati ai clienti dell'utente
             ->whereIn('client_id', $request->user()->clients()->pluck('id'))
-            ->with('exercises')
+            ->with(['exercises', 'client'])
+            ->withCount('exercises')
             ->paginate($perPage);
 
         return new WorkoutPlanCollection($wplans);
@@ -51,7 +52,7 @@ class WorkoutPlanController extends Controller
         ]);
 
         foreach ($validated['exercises'] as $exercise) {
-            $workoutPlan->exercises()->attach($exercise['exercise_id'], [
+            $workoutPlan->exercises()->attach($exercise['id'], [
                 'sets' => $exercise['sets'],
                 'reps' => $exercise['reps'],
             ]);
