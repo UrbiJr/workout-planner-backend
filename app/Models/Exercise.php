@@ -27,4 +27,11 @@ class Exercise extends Model
             ->using(ExerciseWorkoutPlan::class)
             ->withPivot('sets', 'reps');
     }
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 }
