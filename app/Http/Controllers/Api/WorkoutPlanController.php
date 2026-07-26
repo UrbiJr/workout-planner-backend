@@ -85,9 +85,21 @@ class WorkoutPlanController extends Controller
      */
     public function update(UpdateWorkoutPlanRequest $request, WorkoutPlan $workout_plan): JsonResponse
     {
-        $workout_plan->update($request->validated());
-        $workout_plan->load('exercises');
-
+        $validated = $request->validated();
+        if (array_key_exists('client_id', $validated)) {
+            $workout_plan->update(['client_id' => $validated['client_id']]);
+        }
+        if (array_key_exists('exercises', $validated)) {
+            $syncData = [];
+            foreach ($validated['exercises'] as $exercise) {
+                $syncData[$exercise['id']] = [
+                    'sets' => $exercise['sets'],
+                    'reps' => $exercise['reps'],
+                ];
+            }
+            $workout_plan->exercises()->sync($syncData);
+        }
+        $workout_plan->load(['exercises', 'client'])->loadCount('exercises');
         return response()->json([
             'message' => 'Workout Plan aggiornato con successo',
             'data' => new WorkoutPlanResource($workout_plan),
